@@ -4,9 +4,9 @@ import cStringIO
 from random import randrange
 
 while True:
-    i = randrange(190)
-    no = "%03d" % i
-    url = 'http://155.69.149.26/dream_700_700_1k_' + no + '.ts'
+    i = randrange(849)
+    no = str(i)
+    url = 'http://155.69.149.26/xiaoshenke_' + no + '.ts'
     print url
     buf = cStringIO.StringIO()
     c = pycurl.Curl()
