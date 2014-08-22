@@ -3,10 +3,13 @@ import pycurl
 import cStringIO
 from random import randrange
 
+vid     = 'xiaoshenke'
+seg_num = 849
+
 while True:
-    i = randrange(849)
+    i = randrange(seg_num)
     no = str(i)
-    url = 'http://155.69.149.26/xiaoshenke_' + no + '.ts'
+    url = 'http://155.69.149.26/' + vid + '_' + no + '.ts'
     print url
     buf = cStringIO.StringIO()
     c = pycurl.Curl()
