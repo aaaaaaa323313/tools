@@ -5,12 +5,14 @@ import time
 ts_num = 0
 trans_time = 0
 
+
+path = sys.argv[1]
 resolution = sys.argv[2]
 
-for lists in os.listdir(sys.argv[1]):
-    input_file = os.path.join(sys.argv[1], lists)
+for file_name in os.listdir(path):
+    input_file = os.path.join(path, file_name)
     name, suffix = os.path.splitext(input_file)
-    if suffix != ".ts":
+    if suffix != ".ts" or resolution in name:
         continue
 
     output_file = name + "_" + resolution + ".ts"
