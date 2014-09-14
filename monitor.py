@@ -26,38 +26,24 @@ def get_cpu_usage():
 
 
 def get_net_usage():
-    recv = 0
-    send = 0
-
-    lines = os.popen('cat /proc/net/dev').readlines()
-
+    totalin     = 0
+    totalout    = 0
+    times       = 0
+    lines = os.popen('sar -n DEV 1 3').readlines()
     for line in lines:
-        if line.find("eth0") >= 0:
-            line = line.split(" ")
-            try:
-                recv = int(line[3])
-                send = int(line[41])
-            except:
-                return -1
+        if line.find("eth") < 0:
+            continue
+        str = line.split(' ')
+        item = []
+        for i in str:
+            if i != '':
+                item.append(i)
+        totalin = totalin + float(item[5])
+        totalout = totalout + float(item[6])
+        times = times + 1
 
-    time.sleep(5)
-
-    lines = os.popen('cat /proc/net/dev').readlines()
-
-    for line in lines:
-        if line.find("eth0") >= 0:
-            line = line.split(" ")
-            try:
-                recv = int(line[3]) - recv
-                send = int(line[41]) - send
-            except:
-                return -1
-
-    recv = recv/1024/1024
-    send = send/1024/1024
-
-    speed_in	= recv/5
-    speed_out	= send/5
+    speed_in	= totalin/times
+    speed_out	= totalout/times
 
     return (speed_in, speed_out)
 
