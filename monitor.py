@@ -120,10 +120,10 @@ while True:
         count += 1
 
         if count > 0:
-            print 'ave cpu:',       ave_cpu / count
-            print 'ave disk:',      ave_disk / count
-            print 'ave net in:',    ave_net_in / count
-            print 'ave net out:',   ave_net_out / count
+            print 'ave cpu:%.2f'        %   (ave_cpu / count)
+            print 'ave disk:%.2f'       %   (ave_disk / count)
+            print 'ave net in:%.2f'     %   (ave_net_in / count)
+            print 'ave net out:%.2f'    %   (ave_net_out / count)
 
     except:
         continue
