@@ -1,4 +1,6 @@
 import os
+import sys
+import redis
 import random
 import shutil
 
@@ -10,6 +12,10 @@ source_start = 1 * 6
 source_end = 10 * 6
 
 dest_path = "/tmp"
+
+r = redis.StrictRedis(host='localhost', port=6379, db=0)
+r.set("content_num", content_num)
+
 
 for content in range(0, content_num):
     content = str(content)
@@ -23,6 +29,9 @@ for content in range(0, content_num):
     print "new content id:", content
     print "segment number:", seg_num
     print "------------------------"
+    key = "content_" + str(content)
+    val = seg_num
+    r.set(key, val)
 
 
     for seg in range(seg_num):
