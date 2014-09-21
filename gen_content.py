@@ -13,6 +13,7 @@ source_end = 10 * 6
 
 dest_path = "/tmp"
 
+
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 r.set("content_num", content_num)
 
