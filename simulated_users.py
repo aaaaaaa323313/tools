@@ -22,7 +22,7 @@ class viewing_thread(threading.Thread):
             num = randrange(4)
             res = resolutions[num]
             seg_name = "http://" + host_ip + "/" + \
-                    content + '_' + res + '_df_' + str(i) + '.ts'
+                    str(content) + '_' + res + '_df_' + str(i) + '.ts'
 
 
 
@@ -36,11 +36,11 @@ class viewing_thread(threading.Thread):
         if p > 1:
             times = int(round(p))
             for i in range(times):
-                view_the_video(content, seg_num)
+                self.view_the_video(content, seg_num)
         else:
             r = random.random()
             if r < p:
-                view_the_video(content, seg_num)
+                self.view_the_video(content, seg_num)
 
 
 
