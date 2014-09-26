@@ -5,6 +5,9 @@ import random
 import shutil
 import scipy.io
 
+def average_arrival(rate, popularity, seg, seg_num):
+    pass
+
 
 content_num = 100
 
@@ -52,9 +55,10 @@ for i in range(0, content_num):
     r.set(key, val)
 
     key = "req_rate_" + content
-    val = request_rates[i][0]
-    r.set(key, val)
+    rate = request_rates[i][0]
+    r.set(key, rate)
 
+    #copy the original video content into the dir
     for seg in range(seg_num):
         seg = str(seg)
         new_seg = content + "_" + seg + ".ts"
@@ -64,5 +68,12 @@ for i in range(0, content_num):
         old_seg = os.path.join(source_path, old_seg)
 
         shutil.copy2(old_seg, new_seg)
+
+    resolutions = ['1280_720', '854_480', '640_360', '426_240']
+
+    for j in range(0, format_num):
+        for seg in range(seg_num):
+            seg_stor_p = format_storage_size(j) * storage_p
+            seg_tran_p = format_trans_price(j) * average_arrival(rate, format_popular(j), seg, seg_num)
 
 
