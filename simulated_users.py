@@ -13,6 +13,9 @@ class viewing_thread(threading.Thread):
         threading.Thread.__init__(self)
         self.play_list = play_list
 
+    def viewing_proc(self, content, seg_num, req_rat):
+        pass
+
     def run(self):
         r = redis.Redis(host='192.168.0.9', port=6379, db=0)
         while True:
@@ -25,6 +28,8 @@ class viewing_thread(threading.Thread):
                 print "content id:", content
                 print "segment number:", seg_num
                 print "request rate:", req_rat
+
+                viewing_proc(content, seg_num, req_rat)
 
                 time.sleep(3)
 
