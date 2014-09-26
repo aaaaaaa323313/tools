@@ -56,7 +56,7 @@ for i in range(0, content_num):
     r.set(key, val)
 
     key = "req_rate_" + content
-    rate = request_rates[i][0]
+    rate = request_rates[i][0] * 4
     r.set(key, rate)
 
     #copy the original video content into the dir
