@@ -42,7 +42,7 @@ for i in range(0, content_num):
 
     os.makedirs(new_dir)
 
-    seg_num = seg_nums[i];
+    seg_num = seg_nums[0][i];
     print "new content id:", content
     print "segment number:", seg_num
     print "------------------------"
