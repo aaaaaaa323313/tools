@@ -1,12 +1,13 @@
 import os
 import sys
+import math
 import redis
 import random
 import shutil
 import scipy.io
 
 def average_arrival(rate, popularity, seg, seg_num):
-    return 0
+    return rate * popularity * math.exp((-4.6) * seg / seg_num)
 
 
 content_num = 100
@@ -75,5 +76,15 @@ for i in range(0, content_num):
         for seg in range(seg_num):
             seg_stor_p = format_storage_size[j] * storage_p
             seg_tran_p = format_trans_price[j] * average_arrival(rate, format_popular[j], seg, seg_num)
+
+            if seg_tran_p > seg_stor_p:
+                new_seg = content + '_' + resolutions[j] + '_' + 'df' + '_' + str(seg) + '.ts'
+                new_seg = os.path.join(new_dir, new_seg)
+
+                old_seg = source_id + "_" + resolutions[j] + '_' + 'df' + '_' + str(seg) + ".ts"
+                old_seg = os.path.join(source_path, old_seg)
+
+                shutil.copy2(old_seg, new_seg)
+
 
 
