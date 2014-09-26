@@ -4,6 +4,8 @@ import time
 import random
 import redis
 import signal
+import pycurl
+import cStringIO
 import threading
 import subprocess
 from random import randrange
@@ -21,9 +23,21 @@ class viewing_thread(threading.Thread):
         for i in range(seg_num):
             num = randrange(4)
             res = resolutions[num]
-            seg_name = "http://" + host_ip + "/" + \
+            url = "http://" + host_ip + "/" + \
                     str(content) + '_' + res + '_df_' + str(i) + '.ts'
 
+            buf = cStringIO.StringIO()
+            c = pycurl.Curl()
+            c.setopt(pycurl.FOLLOWLOCATION, 1)
+            c.setopt(c.URL, url)
+            c.setopt(c.WRITEFUNCTION, buf.write)
+            c.perform()
+            buf.close()
+
+            p = math.exp((-4.6) * (i + 1) / seg_num)
+            r = random.random()
+            if r > p:
+                break
 
 
     def viewing_proc(self, content, seg_num, req_rat):
@@ -62,7 +76,7 @@ r = redis.Redis(host='192.168.0.9', port=6379, db=0)
 content_num = r.get("content_num")
 content_num = int(content_num)
 
-thread_num = 2
+thread_num = 1
 threads = []
 
 try:
