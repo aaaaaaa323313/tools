@@ -46,10 +46,14 @@ for i in range(0, content_num):
     print "new content id:", content
     print "segment number:", seg_num
     print "------------------------"
-    key = "content_" + str(content)
+    #set the information of request rate and segment number
+    key = "seg_num_" + content
     val = seg_num
     r.set(key, val)
 
+    key = "req_rate_" + content
+    val = request_rates[i][0]
+    r.set(key, val)
 
     for seg in range(seg_num):
         seg = str(seg)
