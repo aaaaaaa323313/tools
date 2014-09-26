@@ -36,6 +36,8 @@ storage_p = 0.0300 / 1000
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 r.set("content_num", content_num)
 
+all_seg_num = 0
+cached_seg_num = 0
 
 for i in range(0, content_num):
     content = i
@@ -74,10 +76,16 @@ for i in range(0, content_num):
 
     for j in range(0, format_num):
         for seg in range(seg_num):
+
+            all_seg_num = all_seg_num + 1
+
             seg_stor_p = format_storage_size[j] * storage_p
             seg_tran_p = format_trans_price[j] * average_arrival(rate, format_popular[j], seg, seg_num)
 
             if seg_tran_p > seg_stor_p:
+
+                cached_seg_num = cached_seg_num + 1
+
                 new_seg = content + '_' + resolutions[j] + '_' + 'df' + '_' + str(seg) + '.ts'
                 new_seg = os.path.join(new_dir, new_seg)
 
@@ -86,5 +94,9 @@ for i in range(0, content_num):
 
                 shutil.copy2(old_seg, new_seg)
 
+
+print 'cached percentage:', cached_seg_num / all_seg_num
+print 'cached number:', cached_seg_num
+print 'all number:', all_seg_num
 
 
