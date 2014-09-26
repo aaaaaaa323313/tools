@@ -6,7 +6,7 @@ import redis
 import signal
 import threading
 import subprocess
-
+from random import randrange
 
 class viewing_thread(threading.Thread):
 
@@ -15,7 +15,16 @@ class viewing_thread(threading.Thread):
         self.play_list = play_list
 
     def view_the_video(self, content, seg_num):
-        pass
+        host_ip = '192.168.0.9'
+        resolutions = ['1280_720', '854_480', '640_360', '426_240']
+        seg_num = int(seg_num)
+        for i in range(seg_num):
+            num = randrange(4)
+            res = resolutions[num]
+            seg_name = "http://" + host_ip + "/" + \
+                    content + '_' + res + '_df_' + str(i) + '.ts'
+
+
 
     def viewing_proc(self, content, seg_num, req_rat):
         print "content id:", content
@@ -25,7 +34,7 @@ class viewing_thread(threading.Thread):
         p = int(req_rat) / 30.0 / 24.0 / 6.0
 
         if p > 1:
-            times = round(p)
+            times = int(round(p))
             for i in range(times):
                 view_the_video(content, seg_num)
         else:
