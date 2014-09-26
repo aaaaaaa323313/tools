@@ -6,7 +6,7 @@ import shutil
 import scipy.io
 
 def average_arrival(rate, popularity, seg, seg_num):
-    pass
+    return 0
 
 
 content_num = 100
