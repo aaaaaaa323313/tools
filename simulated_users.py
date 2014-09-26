@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import random
 import redis
 import signal
 import threading
@@ -13,18 +14,24 @@ class viewing_thread(threading.Thread):
         threading.Thread.__init__(self)
         self.play_list = play_list
 
+    def view_the_video(self, content, seg_num):
+        pass
+
     def viewing_proc(self, content, seg_num, req_rat):
         print "content id:", content
         print "segment number:", seg_num
         print "request rate:", req_rat
 
-        p = req_rat / 30.0 / 24.0 / 6.0
+        p = int(req_rat) / 30.0 / 24.0 / 6.0
 
         if p > 1:
-            times = int(p)
-            print times
+            times = round(p)
+            for i in range(times):
+                view_the_video(content, seg_num)
         else:
-            print p
+            r = random.random()
+            if r < p:
+                view_the_video(content, seg_num)
 
 
 
@@ -37,7 +44,7 @@ class viewing_thread(threading.Thread):
                 cmd = 'req_rate_' + str(content)
                 req_rat = r.get(cmd)
 
-                viewing_proc(content, seg_num, req_rat)
+                self.viewing_proc(content, seg_num, req_rat)
 
                 time.sleep(3)
 
