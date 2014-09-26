@@ -14,9 +14,18 @@ class viewing_thread(threading.Thread):
         self.play_list = play_list
 
     def run(self):
+        r = redis.Redis(host='192.168.0.9', port=6379, db=0)
         while True:
             for content in self.play_list:
-                print content
+                cmd = 'seg_num_' + str(content)
+                seg_num = r.get(cmd)
+                cmd = 'req_rate_' + str(content)
+                req_rat = r.get(cmd)
+
+                print "content id:", content
+                print "segment number:", seg_num
+                print "request rate:", req_rat
+
                 time.sleep(3)
 
 
@@ -24,7 +33,7 @@ r = redis.Redis(host='192.168.0.9', port=6379, db=0)
 content_num = r.get("content_num")
 content_num = int(content_num)
 
-thread_num = 100
+thread_num = 2
 threads = []
 
 try:
