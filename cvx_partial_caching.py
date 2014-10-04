@@ -29,7 +29,7 @@ dest_path = "/home/guanyu/Public/me/static/"
 format_num = 4
 format_popular = [0.25, 0.25, 0.25, 0.25]
 format_storage_size  = [1.93, 1.32, 1.04, 0.94]
-format_trans_price = [i * (0.005 / 3600) for i in [0.5, 0.45, 0.39, 0.37]]   #0.105
+format_trans_price = [i * (0.105 / 3600) for i in [0.5, 0.45, 0.39, 0.37]]   #0.105
 trans_latency = [2.91, 2.87, 2.27, 1.96]
 storage_p = 0.0300 / 1000
 
@@ -56,9 +56,9 @@ for i in range(0, content_num):
         os.makedirs(new_dir)
 
     seg_num = seg_nums[0][i];
-    print "new content id:", content
-    print "segment number:", seg_num
-    print "------------------------"
+    #print "new content id:", content
+    #print "segment number:", seg_num
+    #print "------------------------"
     #set the information of request rate and segment number
     key = "seg_num_" + content
     val = seg_num
@@ -76,11 +76,13 @@ for i in range(0, content_num):
 
         old_seg = source_id + "_" + seg + ".ts"
         old_seg = os.path.join(source_path, old_seg)
-        
+
+        '''
         if os.path.isfile(new_seg):
             pass
         else:
             shutil.copy2(old_seg, new_seg)
+        '''
 
     resolutions = ['1280_720', '854_480', '640_360', '426_240']
 
@@ -104,14 +106,37 @@ for i in range(0, content_num):
             var = m.addVar(vtype=GRB.BINARY, name=seg_name)
             segments.append(var)
 
-print len(segments)
-print len(storage_prices)
-print len(computing_prices)
-ones = [1 for i in range(len(segments))]
+#print len(segments)
+#print len(storage_prices)
+#print len(computing_prices)
+
 m.update()
 m.setObjective(LinExpr(storage_prices, segments) - LinExpr(computing_prices, segments), GRB.MINIMIZE)
 m.addConstr(LinExpr(storage_cost, segments), "<=", 10000000000, "c0")
 m.optimize()
+
+pure_computing = sum(computing_prices)
+pure_storage   = sum(storage_prices)
+optimal_cost   = m.objVal + pure_computing
+
+print 'The cost Reduction percentage:', (pure_storage - optimal_cost) / pure_storage
+
+total = 0
+cache = 0
+miss  = 0
+for v in m.getVars():
+    #print v.varName, v.x
+    if v.x == 1.0:
+        cache += 1
+    elif v.x == 0.0:
+        miss += 1
+    else:
+        print "error"
+        sys.exit()
+
+print cache
+print miss
+print cache * 1.0 / (cache + miss)
 '''
 
             if seg_tran_p > seg_stor_p:
