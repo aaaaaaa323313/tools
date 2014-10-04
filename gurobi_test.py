@@ -8,14 +8,15 @@ try:
     v = {}
     for i in range(3):
         # Create variables
-        v[i] = m.addVar(vtype=GRB.BINARY, name=str(i))
+        v[i] = m.addVar(vtype=GRB.BINARY, name=str(1))
 
     # Integrate new variables
     m.update()
     var = [v[i] for i in range(3)]
     #o = x + y + 2 * z
     # Set objective
-    m.setObjective(LinExpr(coe, var), GRB.MAXIMIZE)
+    c_0 = [1, 2, 3];
+    m.setObjective(LinExpr(coe, var) + LinExpr(c_0, var), GRB.MAXIMIZE)
 
     # Add constraint: x + 2 y + 3 z <= 4
     # c_1 = x + 2 * y + 3 * z
