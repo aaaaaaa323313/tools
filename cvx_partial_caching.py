@@ -11,7 +11,7 @@ def average_arrival(rate, popularity, seg, seg_num):
     return rate * popularity * math.exp((-4.6) * seg / seg_num)
 
 
-content_num = 1000
+content_num = 100
 
 request_rates = scipy.io.loadmat('deployed_request_rates.mat')
 request_rates = request_rates['request_rate']
@@ -122,7 +122,7 @@ m.update()
 m.setObjective(LinExpr(storage_prices, segments) - \
         LinExpr(computing_prices, segments) + \
         pure_computing, GRB.MINIMIZE)
-m.addConstr(LinExpr(storage_cost, segments), "<=", total_str_c * 0.36, "c0")
+m.addConstr(LinExpr(storage_cost, segments), "<=", total_str_c * 0.30, "c0")
 m.addConstr((total_cmp_c - LinExpr(computing_cost, segments)) \
         / total_seg_rate, "<=", 10000000000, "c1")
 m.optimize()
@@ -135,6 +135,8 @@ for v in m.getVars():
     [content, j, seg] = v.varName.split('_')
     j = int(j)
     seg = int(seg)
+    new_dir = os.path.join(dest_path, content)
+
     if v.x == 1.0:
         cached_seg_num = cached_seg_num + 1
 
@@ -161,6 +163,9 @@ for v in m.getVars():
         sys.exit()
 
 print '-------------------------------'
+print 'cached segments:', cached_seg_num
+print 'uncached segments:', uncached_seg_num
+print 'totoal segment num:', all_seg_num
 print 'segment cached percentage:', cached_seg_num * 1.0 / all_seg_num
 print 'The cost Reduction percentage:', (pure_storage - optimal_cost) / pure_storage
 
