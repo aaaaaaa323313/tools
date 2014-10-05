@@ -32,7 +32,7 @@ format_storage_size  = [1.93, 1.32, 1.04, 0.94]
 format_trans_price = [i * (0.105 / 3600) for i in [0.5, 0.45, 0.39, 0.37]]   #0.105
 trans_latency = [2.91, 2.87, 2.27, 1.96]
 storage_p = 0.0300 / 1000
-
+resolutions = ['1280_720', '854_480', '640_360', '426_240']
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 r.set("content_num", content_num)
@@ -55,7 +55,6 @@ for i in range(0, content_num):
     content = str(content)
     new_dir = os.path.join(dest_path, content)
     if not os.path.exists(new_dir):
-        #shutil.rmtree(new_dir)
         os.makedirs(new_dir)
 
     seg_num = seg_nums[0][i];
@@ -85,7 +84,6 @@ for i in range(0, content_num):
         else:
             shutil.copy2(old_seg, new_seg)
 
-    resolutions = ['1280_720', '854_480', '640_360', '426_240']
 
     for j in range(0, format_num):
         for seg in range(seg_num):
@@ -127,7 +125,7 @@ m.addConstr((total_cmp_c - LinExpr(computing_cost, segments)) \
         / total_seg_rate, "<=", 10000000000, "c1")
 m.optimize()
 
-optimal_cost   = m.objVal
+optimal_cost = m.objVal
 
 
 for v in m.getVars():
